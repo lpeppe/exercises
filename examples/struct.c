@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-typedef struct couple
+typedef struct
 {
     int num1;
     int num2;
