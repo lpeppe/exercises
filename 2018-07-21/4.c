@@ -15,6 +15,11 @@ typedef struct
     List a, b;
 } CdL;
 
+// inserisce un nodo in testa alla lista.
+// In questo modo è possibile invertire l'ordine della lista di output
+// se la lista sulla quale si invoca la funzione è:
+// "aa"->"bb"->"cc" e si passa in input "zz", la nuova lista sarà:
+// "zz"->"aa"->"bb"->"cc"
 void insertNode(List *head, char *wrd)
 {
     List p = malloc(sizeof(Node));
@@ -29,18 +34,28 @@ List getStringsInCommon(CdL c)
     List headB = c.b;
     List a = c.a;
     List b = headB;
+    // scorro la prima lista
     while (a != NULL)
     {
+        // scorro la seconda lista
         while (b != NULL)
         {
+            // se le due stringhe che stiamo scorrendo sono uguali,
+            // aggiungile alla lista di output
             if (strcmp(a->wrd, b->wrd) == 0)
             {
+                // passo ad insertNode l'indirizzo di memoria di
+                // toReturnHead, in modo tale che la modifica sia visibile
+                // dalla funzione chiamante
                 insertNode(&toReturnHead, a->wrd);
                 break;
             }
+            // passo alla stringa successiva nella seconda lista
             b = b->prox;
         }
+        // passo alla stringa successiva nella prima lista
         a = a->prox;
+        // faccio ripartire b dall'inizio (come quando in un for interno azzero j)
         b = headB;
     }
     return toReturnHead;
@@ -52,31 +67,43 @@ List getStringsNotInCommon(CdL c)
     List a = c.a;
     List b = c.b;
     int strcmpRes;
+    // scorro le liste fin quando non le esaurisco entrambe
     while (a != NULL || b != NULL)
     {
+        // se la prima lista è finita, aggiungo alla lista di output
+        // tutti gli elementi della seconda
         if (a == NULL)
         {
             insertNode(&mergedHead, b->wrd);
             b = b->prox;
         }
+        // se la seconda è finita, aggiungo alla lista di output
+        // tutti gli elementi della prima
         else if (b == NULL)
         {
             insertNode(&mergedHead, a->wrd);
             a = a->prox;
         }
+        // se nessuna delle due liste è esaurita
         else
         {
+            // faccio un confronto lessicografico tra le due stringhe
             strcmpRes = strcmp(a->wrd, b->wrd);
+            // se a è più piccola di b (in ordine lessicografico)
             if (strcmpRes < 0)
             {
                 insertNode(&mergedHead, a->wrd);
                 a = a->prox;
             }
+            // se strcmpRes == 0, significa che la stringa è presente
+            // in entrambe le liste, quindi non deve essere inserita in quella
+            // di output
             else if (strcmpRes == 0)
             {
                 a = a->prox;
                 b = b->prox;
             }
+            // se si arriva qui, significa che b è più piccola di a
             else
             {
                 insertNode(&mergedHead, b->wrd);
@@ -89,8 +116,11 @@ List getStringsNotInCommon(CdL c)
 
 CdL *split(CdL c)
 {
+    // alloca memoria per la CdL da restituire in output
     CdL *toReturn = malloc(sizeof(CdL));
+    // pone il campo a della CdL uguale all'output della funzione getStringsInCommon
     toReturn->a = getStringsInCommon(c);
+    // pone il campo b della CdL uguale all'output della funzione getStringsNotInCommon
     toReturn->b = getStringsNotInCommon(c);
     return toReturn;
 }
@@ -137,9 +167,9 @@ int main()
     fourthB->wrd = malloc(3 * sizeof(char));
 
     // assign strings
-    strcpy(firstA->wrd, "aa");
-    strcpy(secondA->wrd, "bb");
-    strcpy(thirdA->wrd, "cc");
+    strcpy(firstA->wrd, "uu");
+    strcpy(secondA->wrd, "vv");
+    strcpy(thirdA->wrd, "zz");
     strcpy(firstB->wrd, "aa");
     strcpy(secondB->wrd, "bb");
     strcpy(thirdB->wrd, "cc");

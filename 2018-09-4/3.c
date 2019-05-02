@@ -10,10 +10,14 @@ int max(int k)
     for (int i = 2; i < k; i++)
     {
         int tmp;
+        // se il numero è pari, s 2n = s n
         if (i % 2 == 0)
             tmp = p[i / 2];
+        // se è dispari, s 2n+1 = s n + s n+1
         else
             tmp = p[(i - 1) / 2] + p[(i - 1) / 2 + 1];
+        // se l'elemento calcolato è > del massimo attuale, 
+        // aggiorna il massimo
         if(tmp > max)
             max = tmp;
         p[i] = tmp;

@@ -4,6 +4,6 @@
 int main() {
     int a = 5, *p;
     p = &a;
-    printf("%p\n", &p);
+    printf("%d\n", *p);
     return 0;
 }
