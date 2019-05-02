@@ -15,12 +15,19 @@ typedef struct
     List a, b;
 } CdL;
 
+void insertNode(List *head, char *wrd)
+{
+    List p = malloc(sizeof(Node));
+    p->wrd = wrd;
+    p->prox = *head;
+    *head = p;
+}
+
 List getStringsInCommon(CdL c)
 {
-    List toReturnHead = NULL, toReturnLast, p;
-    List headA = c.a;
+    List toReturnHead = NULL, toReturnLast;
     List headB = c.b;
-    List a = headA;
+    List a = c.a;
     List b = headB;
     while (a != NULL)
     {
@@ -28,14 +35,7 @@ List getStringsInCommon(CdL c)
         {
             if (strcmp(a->wrd, b->wrd) == 0)
             {
-                p = malloc(sizeof(Node));
-                if (toReturnHead == NULL)
-                    toReturnHead = p;
-                else
-                    toReturnLast->prox = p;
-                p->wrd = a->wrd;
-                p->prox = NULL;
-                toReturnLast = p;
+                insertNode(&toReturnHead, a->wrd);
                 break;
             }
             b = b->prox;
@@ -48,39 +48,43 @@ List getStringsInCommon(CdL c)
 
 List getStringsNotInCommon(CdL c)
 {
-    List toReturnHead = NULL, toReturnLast, p;
-    List headA = c.a;
-    List headB = c.b;
-    List a = headA;
-    List b = headB;
-    int flag = 0;
-    while (a != NULL)
+    List mergedHead = NULL, mergedLast, p;
+    List a = c.a;
+    List b = c.b;
+    int strcmpRes;
+    while (a != NULL || b != NULL)
     {
-        while (b != NULL)
+        if (a == NULL)
         {
-            if (strcmp(a->wrd, b->wrd) == 0)
-            {
-                flag = 1;
-                break;
-            }
+            insertNode(&mergedHead, b->wrd);
             b = b->prox;
         }
-        if (flag == 0)
+        else if (b == NULL)
         {
-            p = malloc(sizeof(Node));
-            if (toReturnHead == NULL)
-                toReturnHead = p;
-            else
-                toReturnLast->prox = p;
-            p->wrd = a->wrd;
-            p->prox = NULL;
-            toReturnLast = p;
+            insertNode(&mergedHead, a->wrd);
+            a = a->prox;
         }
-        flag = 0;
-        a = a->prox;
-        b = headB;
+        else
+        {
+            strcmpRes = strcmp(a->wrd, b->wrd);
+            if (strcmpRes < 0)
+            {
+                insertNode(&mergedHead, a->wrd);
+                a = a->prox;
+            }
+            else if (strcmpRes == 0)
+            {
+                a = a->prox;
+                b = b->prox;
+            }
+            else
+            {
+                insertNode(&mergedHead, b->wrd);
+                b = b->prox;
+            }
+        }
     }
-    return toReturnHead;
+    return mergedHead;
 }
 
 CdL *split(CdL c)
@@ -111,7 +115,8 @@ void printCdL(CdL c)
 
 int main()
 {
-    Node *firstA, *secondA, *thirdA, *firstB, *secondB;
+    Node *firstA, *secondA, *thirdA, *firstB,
+        *secondB, *thirdB, *fourthB;
     List a, b;
     CdL cdl;
 
@@ -121,25 +126,33 @@ int main()
     thirdA = malloc(sizeof(Node));
     firstB = malloc(sizeof(Node));
     secondB = malloc(sizeof(Node));
+    thirdB = malloc(sizeof(Node));
+    fourthB = malloc(sizeof(Node));
     firstA->wrd = malloc(3 * sizeof(char));
     secondA->wrd = malloc(3 * sizeof(char));
     thirdA->wrd = malloc(3 * sizeof(char));
     firstB->wrd = malloc(3 * sizeof(char));
     secondB->wrd = malloc(3 * sizeof(char));
+    thirdB->wrd = malloc(3 * sizeof(char));
+    fourthB->wrd = malloc(3 * sizeof(char));
 
     // assign strings
     strcpy(firstA->wrd, "aa");
     strcpy(secondA->wrd, "bb");
     strcpy(thirdA->wrd, "cc");
     strcpy(firstB->wrd, "aa");
-    strcpy(secondB->wrd, "tt");
+    strcpy(secondB->wrd, "bb");
+    strcpy(thirdB->wrd, "cc");
+    strcpy(fourthB->wrd, "zz");
 
     // link the lists
     firstA->prox = secondA;
     secondA->prox = thirdA;
     thirdA->prox = NULL;
     firstB->prox = secondB;
-    secondB->prox = NULL;
+    secondB->prox = thirdB;
+    thirdB->prox = fourthB;
+    fourthB->prox = NULL;
 
     a = firstA;
     b = firstB;
@@ -153,9 +166,13 @@ int main()
     free(thirdA->wrd);
     free(firstB->wrd);
     free(secondB->wrd);
+    free(thirdB->wrd);
+    free(fourthB->wrd);
     free(firstA);
     free(secondA);
     free(thirdA);
     free(firstB);
     free(secondB);
+    free(thirdB);
+    free(fourthB);
 }
