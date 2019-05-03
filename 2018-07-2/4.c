@@ -35,18 +35,28 @@ int pref(char *str1, char *str2)
 
 int calcListSize(List lis)
 {
-    int counter = 0;
-    while (lis != NULL)
+    // modo meno figo
+    // int counter = 0;
+    // while (lis != NULL)
+    // {
+    //     counter++;
+    //     lis = lis->prox;
+    // }
+
+    // modo più figo
+    int count;
+    for (count = 0; lis != NULL; count++, lis = lis->prox)
     {
-        counter++;
-        lis = lis->prox;
     }
-    return counter;
+    return count;
 }
 
-int *allocateArray(int size) {
+// la funzione inizializza un array in cui tutte le posizioni
+// sono poste a 0
+int *allocateArray(int size)
+{
     int *toReturn = malloc(sizeof(int) * size);
-    for(int i = 0; i < size; i++)
+    for (int i = 0; i < size; i++)
         toReturn[i] = 0;
     return toReturn;
 }
@@ -54,15 +64,26 @@ int *allocateArray(int size) {
 int *countall(List lis, FILE *source)
 {
     char c, *str = "";
+    // crea un array di dimensione pari al numero di parole
+    // nella lista di stringhe
     int *toReturn = allocateArray(calcListSize(lis));
     int i = 0;
     while (lis != NULL)
     {
         while ((c = fgetc(source)) != EOF)
         {
+            // la funzione appendChar prende in input
+            // la stringa str e il char c e restituisce una
+            // stringa in cui viene concatenato c a str
             str = appendChar(str, c);
+            // se il buffer è prefisso della stringa che
+            // stiamo cercando
             if (pref(str, lis->str))
             {
+                // se il buffer è proprio uguale
+                // alla stringa che stiamo cercando
+                // aumenta il contatore relativo alla stringa
+                // e azzera il buffer
                 if (strcmp(str, lis->str) == 0)
                 {
                     toReturn[i]++;
@@ -70,19 +91,25 @@ int *countall(List lis, FILE *source)
                     str = "";
                 }
             }
+            // se il buffer non è prefisso della stringa
+            // che stiamo cercando, svuotalo
             else
             {
                 free(str);
                 str = "";
             }
         }
+        // passa alla parola successiva ed incrementa il contatore
         lis = lis->prox;
         i++;
+        // riporta il cursore all'inizio del file
         rewind(source);
     }
     return toReturn;
 }
 
+// la funzione crea una lista a partire da un
+// array di stringhe passato in input
 List createList(char **words, int size)
 {
     List head = malloc(sizeof(Node)), p, last;
