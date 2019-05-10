@@ -25,14 +25,9 @@ int maxTriProd(int *arr, int size)
 int *sommePrefisse(int *arr, int size)
 {
     int *sp = malloc(sizeof(int) * size);
-    int sum = 0;
-    for (int i = 1; i <= size; i++)
-    {
-        for (int j = 0; j < i; j++)
-            sum += arr[j];
-        sp[i - 1] = sum;
-        sum = 0;
-    }
+    sp[0] = arr[0];
+    for (int i = 1; i < size; i++)
+        sp[i] = sp[i-1] + arr[i];
     return sp;
 }
 
@@ -46,7 +41,7 @@ void printArray(int *arr, int size)
 int main()
 {
     int size = 4;
-    int arr[] = {1, 1, 1, 2};
-    printf("%d\n", maxTriProd(arr, size));
-    // printArray(sommePrefisse(arr, size), size);
+    int arr[] = {1, -1, 9, 21};
+    // printf("%d\n", maxTriProd(arr, size));
+    printArray(sommePrefisse(arr, size), size);
 }
