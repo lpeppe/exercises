@@ -62,7 +62,7 @@ int main() {
         printf("Conversione in decimale di %s\n: %d\n", buff,
                conversioneInDecConStr(buff));
     }
-    // versione con numero
+    // // versione con numero
     while (1) {
         printf("Inserisci numero: ");
         scanf("%d", n);
