@@ -46,8 +46,9 @@ int conversioneInDecimale(char n1[], int b1, char alf1[]) {
     return n_dec;
 }
 
-char *conversioneDefinitiva(int n_dec, int b2) {
-    int arr[100], i, j, n_finale = 0;
+char *conversioneDefinitiva(int n_dec, int b2, char *alf2) {
+    int arr[100], i, j, k;
+    char *n_finale = malloc(100);
 
     for (i = 0; n_dec > 0; i++) {  // i è la posizione dell'array in cui metto i
                                    // retsi della divisione
@@ -58,11 +59,10 @@ char *conversioneDefinitiva(int n_dec, int b2) {
     // 15
     // 14
     // 4
-    for (j = 0; j < i; j++) {
-        n_finale = n_finale + (arr[j] * (int)pow(b2, j));
-    }
-    printf("%d\n", n_finale);
-    return "n_finale";
+    for (j = 0, k = i - 1; j < i; j++, k--) 
+        n_finale[k] = alf2[arr[j]];
+    n_finale[j] = '\0';
+    return n_finale;
 }
 
 int main() {
@@ -90,14 +90,13 @@ int main() {
     }
 
     // printf("%d\n", conversioneInDecimale(n1, b1, alf1));
-    printf("%d\n",
-           conversioneDefinitiva(conversioneInDecimale(n1, b1, alf1), b2));
+    printf("%s\n", conversioneDefinitiva(conversioneInDecimale(n1, b1, alf1),
+                                         b2, alf2));
     // printf("in che base vuoi convertire il numero inserito?  ");
     // scanf("%d", &b2);
 
     // if (!controlloBase(n1, b1))
     //     return 0;
-
     // n_dec = conversioneInDecimale(n1, b1);
 
     // printf("%d", conversioneDefinitiva(n_dec, b2));
