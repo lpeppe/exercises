@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+// la funzione controlla che le basi siano >= degli alfabeti
 int controlloBase(char alf1[], char alf2[], int b1, int b2) {
     int dim1 = strlen(alf1);
     int dim2 = strlen(alf2);
@@ -11,6 +12,8 @@ int controlloBase(char alf1[], char alf2[], int b1, int b2) {
     return (dim1 >= b1 && dim2 >= b2);
 }
 
+// la funzione controlla i caratteri del numero in input
+// facciano effettivamente parte dell'alfabeto
 int checkAlf(char alf[], char n[]) {
     int i, j, dim_alf = strlen(alf), dim_n = strlen(n), k = 0;
     for (i = 0; i < dim_n; i++) {
@@ -22,10 +25,13 @@ int checkAlf(char alf[], char n[]) {
         }
         if (k == 0)
             return 0;
+        k = 0;
     }
     return 1;
 }
 
+// la funzione restituisce la posizione del carattere all'interno
+// dell'alfabeto. Serve a calcolare il valore del carattere.
 int indexOf(char c, char alf[]) {
     int i, dim = strlen(alf);
     for (i = 0; i < dim; i++) {
@@ -37,7 +43,6 @@ int indexOf(char c, char alf[]) {
 
 int conversioneInDecimale(char n1[], int b1, char alf1[]) {
     int i, exp = 0, dim, n_dec = 0;
-    // 126578
     dim = strlen(n1);
     for (i = (dim - 1); i >= 0; i--) {
         n_dec = n_dec + indexOf(n1[i], alf1) * (int)pow(b1, exp);
@@ -51,16 +56,20 @@ char *conversioneDefinitiva(int n_dec, int b2, char *alf2) {
     char *n_finale = malloc(100);
 
     for (i = 0; n_dec > 0; i++) {  // i è la posizione dell'array in cui metto i
-                                   // retsi della divisione
+                                   // resti della divisione
         arr[i] = n_dec % b2;  // che sono le cifre del numero covertito
         n_dec = n_dec / b2;
     }
-    // 7
-    // 15
-    // 14
-    // 4
-    for (j = 0, k = i - 1; j < i; j++, k--) 
+
+    // k parte da i-1 perchè dobbiamo leggere i resti
+    // al contrario.
+    k = i - 1;
+    for (j = 0; j < i; j++) {
         n_finale[k] = alf2[arr[j]];
+        k--;
+    }
+
+    // mettiamo \0 alla fine della stringa per terminarla.
     n_finale[j] = '\0';
     return n_finale;
 }
