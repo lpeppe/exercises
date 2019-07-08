@@ -10,5 +10,5 @@ void stampa2() {
 
 int main() {
     printf("%s\n", 1 > 0 ? "Test1" : "Test2");
-    1 ? stampa1() : stampa2();
+    // 1 ? stampa1() : stampa2();
 }

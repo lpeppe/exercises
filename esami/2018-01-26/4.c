@@ -41,6 +41,22 @@ int fNonCons(Lista p, int n) {
     }
 }
 
+int fNonCons2(Lista p, int n) {
+    int cont = 0, contDif = 0;
+    while (p != NULL) {
+        if (p->n == n) {
+            if (cont > 0 && contDif > 0)
+                return 1;
+            cont++;
+            contDif = 0;
+        } else {
+            contDif++;
+        }
+        p = p->prox;
+    }
+    return 0;
+}
+
 int quantiAlmenoTriplici(Lista lis) {
     int count = 0, tmpCont = 0;
     Lista head = lis;
@@ -65,12 +81,12 @@ int main() {
     Lista p4 = malloc(sizeof(Nodo));
     Lista p5 = malloc(sizeof(Nodo));
     Lista p6 = malloc(sizeof(Nodo));
-    p1->n = 1;
-    p2->n = 2;
+    p1->n = 2;
+    p2->n = 1;
     p3->n = 1;
-    p4->n = 2;
-    p5->n = 1;
-    p6->n = 2;
+    p4->n = 1;
+    p5->n = 2;
+    p6->n = 1;
     p1->prox = p2;
     p2->prox = p3;
     p3->prox = p4;
@@ -78,5 +94,6 @@ int main() {
     p5->prox = p6;
     p6->prox = NULL;
     // printf("%d\n", fNonCons(p1, 1));
-    printf("%d\n", quantiAlmenoTriplici(p1));
+    // printf("%d\n", quantiAlmenoTriplici(p1));
+    printf("%d\n", fNonCons2(p1, 1));
 }
